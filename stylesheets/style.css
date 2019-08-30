@@ -1,0 +1,70 @@
+html, body {height:100%;}
+html {display:table; width:100%;}
+
+body {
+    padding: 50px;
+    font-size: 1.25em;
+    width: 95%;
+    display: table-cell;
+    text-align: center;
+}
+
+a {
+  color: #00B7FF;
+}
+
+h1, h2, h3, img, p, div, button, video, pre {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+img, button {
+    width: auto;
+    padding: 5px;
+}
+
+input, select {
+    font-weight: bold;
+    font-family: monospace;
+}
+
+div.frame {
+  width: 100%;
+  height: 100%;
+}
+
+canvas {
+  border: 1px solid;
+}
+
+input.button, a.button {
+    text-decoration: none;
+    background-color: #EEEEEE;
+    color: #333333;
+    padding: 2px 6px 2px 6px;
+    border-top: 1px solid #CCCCCC;
+    border-right: 1px solid #333333;
+    border-bottom: 1px solid #333333;
+    border-left: 1px solid #CCCCCC;
+    margin-left: auto;
+    margin-right: auto;
+
+    border-radius: 0;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+}
+
+@media (max-width: 520px) {
+    body {
+      padding: 5px;
+      font-size: 1em;
+      width: 100%;
+    }
+
+    div.frame {
+      width: 95%;
+      height: 95%;
+    }
+}
