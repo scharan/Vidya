@@ -16,15 +16,34 @@ var CanvasDrawr = function (options) {
   var cleanSlateBtn = document.getElementById(options.cleanSlateBtnId);
   var clearBtn = document.getElementById(options.clearBtnId);
 
+  var currentActivityBtn = document.getElementById(options.activityTypeId);
+
+  var activityParameters = {
+    numbers: {
+      asciiStartIndex: 0,
+      asciiEndIndex: 10
+    },
+    englishUpper: {
+      asciiStartIndex: 65,
+      asciiEndIndex: 91
+    },
+    englishLower: {
+      asciiStartIndex: 97,
+      asciiEndIndex: 123
+    }
+  }
+
   var lines = [, ,];
   var offset = $(canvas).offset();
 
   var self = {
     slateMode: false,
     activeColor: 0,
+    currentActivity: undefined,
     currentNumber: 0,
     mousedown: 0,
-    colors: ["violet", "indigo", "blue", "green", "yellow", "orange", "pink", "magenta"],
+
+    colors: ["violet", "indigo", "blue", "green", "yellow", "orange", "pink", "magenta", "orangered", "aqua"],
 
     init: function () {
       canvas.addEventListener('touchstart', self.preDraw, false);
@@ -34,10 +53,23 @@ var CanvasDrawr = function (options) {
       canvas.addEventListener('mousemove', self.draw, false);
       canvas.addEventListener('mouseup', self.postDraw, false);
 
-      cleanSlateBtn.addEventListener('click',  function(){ self.cleanSlateCanvas(true /*slateMode*/);}, false);
       clearBtn.addEventListener('click', self.clearCanvas, false);
-      nextBtn.addEventListener('click', function() { self.slateMode = false; self.nextNumber(); }, false);
+      cleanSlateBtn.addEventListener('click',  function() {
+        self.cleanSlateCanvas(true /*slateMode*/);
+      }, false);
+      nextBtn.addEventListener('click', function() {
+        self.slateMode = false;
+        self.nextNumber();
+      }, false);
+      currentActivityBtn.addEventListener('change', function() {
+        self.currentActivity = currentActivityBtn.value;
+        self.currentNumber = activityParameters[self.currentActivity].asciiStartIndex;
+        self.clearCanvas();
+        self.showText(self.currentNumber);
+        console.log(`activity changed: currrentActivity: ${self.currentActivity}, number: ${self.currentNumber}`);
+      }, false);
 
+      self.currentActivity = currentActivityBtn.value;
       self.showText(self.currentNumber);
     },
     cleanSlateCanvas: function (slateMode = false) {
@@ -47,21 +79,29 @@ var CanvasDrawr = function (options) {
     clearCanvas: function () {
       self.cleanSlateCanvas(self.slateMode);
       if (!self.slateMode)
-        self.showText(self.currentNumber);
+        self.showText(self.currentNumber % activityParameters[self.currentActivity].asciiEndIndex);
+    },
+    textFromAscii: function (asciiValue) {
+      return String.fromCharCode(asciiValue);
     },
     resetCanvas: function (text) {
       self.cleanSlateCanvas();
-      self.showText(text ? text : 0);
+      self.showText(text ? text : activityParameters[self.currentActivity].asciiStartIndex);
     },
     nextNumber: function () {
-      self.resetCanvas(++self.currentNumber % 10);
+      var next = ++self.currentNumber % activityParameters[self.currentActivity].asciiEndIndex;
+      console.log(`nextNumber: self.currentNumber: ${self.currentNumber}, next: ${next}`);
+      self.resetCanvas(next);
     },
     showText: function (text) {
       // https://www.html5tutorial.info/html5-canvas-text.php
-      context.font = canvas.offsetHeight + 'px monospace';
+      context.font = canvas.offsetHeight + 'px Kalam cursive monotype';
       context.textBaseline = 'middle';
       context.textAlign = 'center';
-      context.strokeText(text, canvas.offsetWidth/2, canvas.offsetHeight/2);
+      context.strokeText(
+        text > 9 ? self.textFromAscii(text) : text, // String.fromCharCode does not work for 0-9.
+        canvas.offsetWidth/2,
+        canvas.offsetHeight/2);
     },
     nextColor: function() {
       return self.colors[self.activeColor++ % self.colors.length];
@@ -131,6 +171,7 @@ var CanvasDrawr = function (options) {
 $(function () {
   var super_awesome_multitouch_drawing_canvas_thingy = new CanvasDrawr({
     size: 15,
+    activityTypeId: "activityType",
     canvasId: "sketchpad",
     cleanSlateBtnId: "cleanSlateBtn",
     clearBtnId: "clearBtn"

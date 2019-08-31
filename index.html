@@ -4,15 +4,22 @@
   <title>Vidya -- Activities for Toddlers</title>
   <meta name="viewport" content="width=device-width">
   <link rel="stylesheet" href="./stylesheets/style.css">
+  <link href="https://fonts.googleapis.com/css?family=Kalam:400,700&display=swap&subset=devanagari,latin-ext" rel="stylesheet">
 </head>
 
 <body>
   <div class="frame">
-    <h4>Vidya - Activities for Toddlers</h4>
+    <h1 id="title">Vidya - for Toddlers</h1>
     <canvas id="sketchpad"></canvas>
     <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script src="./scripts/tuio.js"></script>
     <br /> <br />
+    <select id="activityType" name="activityType">
+      <option value="numbers">1, 2, 3,...</option>
+      <option value="englishUpper">A, B, C,...</option>
+      <option value="englishLower">a, b, c,...</option>
+    </select>
+    <br />  <br />
     <input type="submit" class="button" value="Blank Slate" id="cleanSlateBtn">&nbsp;&nbsp;&nbsp;
     <input type="submit" class="button" value="Clear" id="clearBtn">&nbsp;&nbsp;&nbsp;
     <input type="submit" class="button" value="Next" id="nextBtn">
