@@ -24,6 +24,9 @@ h1, h2, h3, img, p, div, button, video, pre {
 
 #title {
   font-family: 'Kalam', cursive;
+  margin-top: none;
+  padding: none;
+  margin-bottom: 5px;
 }
 
 img, button {
