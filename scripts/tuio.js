@@ -95,7 +95,7 @@ var CanvasDrawr = function (options) {
     },
     showText: function (text) {
       // https://www.html5tutorial.info/html5-canvas-text.php
-      context.font = canvas.offsetHeight + 'px Kalam cursive monotype';
+      context.font = canvas.offsetHeight + 'px monospace';
       context.textBaseline = 'middle';
       context.textAlign = 'center';
       context.strokeText(
