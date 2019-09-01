@@ -66,6 +66,10 @@ input.button, a.button {
     -webkit-border-radius: 0;
 }
 
+.speakBtn {
+  font-size: 3em;
+}
+
 .pencils {
   position: relative;
   margin: auto;

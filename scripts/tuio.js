@@ -38,8 +38,21 @@ var CanvasDrawr = function (options) {
   context.pX = undefined;
   context.pY = undefined;
 
+  // https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance
+  var synth = window.speechSynthesis;
+  var voices = synth.getVoices();
+  // console.log(`Voices: voices.length: ${voices.length}, ${JSON.stringify(voices)}`);
+  // voices.forEach(function(voice) {
+  //   console.log(`Voices: lang: ${voice.lang}, name: ${voice.name}`);
+  // });
+
   var cleanSlateBtn = document.getElementById(options.cleanSlateBtnId);
   var clearBtn = document.getElementById(options.clearBtnId);
+  var speakBtn = document.getElementById(options.speakBtnId);
+  speakBtn.style.position = 'absolute';
+  console.log(`canvas.offsetLeft: ${canvas.offsetLeft}, canvas.width: ${canvas.width}`);
+  speakBtn.style.top = canvas.offsetTop+"px";
+  speakBtn.style.left = canvas.width/2+"px";
 
   var currentActivityBtn = document.getElementById(options.activityTypeId);
   var pencilsNode = document.getElementById('pencils');
@@ -80,6 +93,11 @@ var CanvasDrawr = function (options) {
       canvas.addEventListener('mouseup', self.postDraw, false);
 
       clearBtn.addEventListener('click', self.clearCanvas, false);
+      speakBtn.addEventListener('click', function() {
+        var textToSpeak = self.textToShow(self.currentNumber)
+        self.speak(textToSpeak);
+        console.log(`speakBtn.onclick: self.currentNumber: ${self.currentNumber}, textToSpeak: ${textToSpeak}`);
+      }, false);
       cleanSlateBtn.addEventListener('click',  function() {
         self.cleanSlateCanvas(true /*slateMode*/);
       }, false);
@@ -141,15 +159,28 @@ var CanvasDrawr = function (options) {
       console.log(`nextNumber: self.currentNumber: ${self.currentNumber}, next: ${next}`);
       self.resetCanvas(next);
     },
+    textToShow: function(text) {
+      return text > 9 ? self.textFromAscii(text) : text; // String.fromCharCode does not work for 0-9.
+    },
+    speak: function(textToSpeak) {
+      utterThis = new SpeechSynthesisUtterance(textToSpeak);
+      // utterThis.voice = voices[1];
+      synth.speak(utterThis);
+    },
     showText: function (text) {
       // https://www.html5tutorial.info/html5-canvas-text.php
       context.font = canvas.offsetHeight + 'px monospace';
       context.textBaseline = 'middle';
       context.textAlign = 'center';
+
+      var textToShow = self.textToShow(text);
+      console.log(`showText: textToShow: ${textToShow}`);
       context.strokeText(
-        text > 9 ? self.textFromAscii(text) : text, // String.fromCharCode does not work for 0-9.
+        self.textToShow(text),
         canvas.offsetWidth/2,
         canvas.offsetHeight/2);
+
+      self.speak(textToShow);
     },
     nextColor: function() {
       return self.colors[self.activeColor++ % self.colors.length];
@@ -222,6 +253,7 @@ $(function () {
     activityTypeId: "activityType",
     canvasId: "sketchpad",
     cleanSlateBtnId: "cleanSlateBtn",
-    clearBtnId: "clearBtn"
+    clearBtnId: "clearBtn",
+    speakBtnId: "speakBtn"
   });
 });
