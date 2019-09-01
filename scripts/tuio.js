@@ -49,10 +49,11 @@ var CanvasDrawr = function (options) {
   var cleanSlateBtn = document.getElementById(options.cleanSlateBtnId);
   var clearBtn = document.getElementById(options.clearBtnId);
   var speakBtn = document.getElementById(options.speakBtnId);
+  var speakBtnFontSizePx = 30;
+  speakBtn.style['font-size'] = speakBtnFontSizePx+"px";
   speakBtn.style.position = 'absolute';
-  console.log(`canvas.offsetLeft: ${canvas.offsetLeft}, canvas.width: ${canvas.width}`);
-  speakBtn.style.top = canvas.offsetTop+"px";
-  speakBtn.style.left = canvas.width/2+"px";
+  speakBtn.style.top = (canvas.offsetTop)+"px";
+  speakBtn.style.left = (canvas.offsetLeft)+"px";
 
   var currentActivityBtn = document.getElementById(options.activityTypeId);
   var pencilsNode = document.getElementById('pencils');
