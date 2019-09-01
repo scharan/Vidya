@@ -94,6 +94,7 @@ var CanvasDrawr = function (options) {
         self.showText(self.currentNumber);
         // console.log(`activity changed: currrentActivity: ${self.currentActivity}, number: ${self.currentNumber}`);
       }, false);
+      document.addEventListener('contextmenu', event => event.preventDefault());
 
       self.currentActivity = currentActivityBtn.value;
       self.showText(self.currentNumber);
