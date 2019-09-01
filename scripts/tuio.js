@@ -44,15 +44,15 @@ var CanvasDrawr = function (options) {
 
   var cleanSlateBtn = document.getElementById(options.cleanSlateBtnId);
   var clearBtn = document.getElementById(options.clearBtnId);
+  var currentActivityBtn = document.getElementById(options.activityTypeId);
+  var pencilsNode = document.getElementById('pencils');
+
   var speakBtn = document.getElementById(options.speakBtnId);
   var speakBtnFontSizePx = 30;
   speakBtn.style['font-size'] = speakBtnFontSizePx+"px";
   speakBtn.style.position = 'absolute';
-  speakBtn.style.top = (canvas.offsetTop)+"px";
-  speakBtn.style.left = (canvas.offsetLeft)+"px";
-
-  var currentActivityBtn = document.getElementById(options.activityTypeId);
-  var pencilsNode = document.getElementById('pencils');
+  speakBtn.style.top = canvas.offsetTop+"px";
+  speakBtn.style.left = (canvas.offsetLeft + canvas.width - speakBtnFontSizePx)/2+"px";
 
   var activityParameters = {
     numbers: {
