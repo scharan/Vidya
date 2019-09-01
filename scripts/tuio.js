@@ -1,3 +1,28 @@
+//http://mcgivery.com/htmlelement-pseudostyle-settingmodifying-before-and-after-in-javascript/
+//https://jsfiddle.net/Tf69a/1/
+var UID = {
+	_current: 0,
+	getNew: function(){
+		this._current++;
+		return this._current;
+	}
+};
+
+HTMLElement.prototype.pseudoStyle = function(element,prop,value){
+	var _this = this;
+	var _sheetId = "pseudoStyles";
+	var _head = document.head || document.getElementsByTagName('head')[0];
+	var _sheet = document.getElementById(_sheetId) || document.createElement('style');
+	_sheet.id = _sheetId;
+	var className = "pseudoStyle" + UID.getNew();
+	
+	_this.className +=  " "+className; 
+	
+	_sheet.innerHTML += " ."+className+":"+element+"{"+prop+":"+value+"}";
+	_head.appendChild(_sheet);
+	return this;
+};
+
 var CanvasDrawr = function (options) {
   var canvas = document.getElementById(options.canvasId);
   canvas.style.width = '100%'
@@ -71,6 +96,22 @@ var CanvasDrawr = function (options) {
 
       self.currentActivity = currentActivityBtn.value;
       self.showText(self.currentNumber);
+      self.addPencils();
+    },
+    addPencils: function() {
+      self.colors.forEach(function(color) {
+        self.addPencil(color);
+      });
+    },
+    addPencil: function(color) {
+      // https://codepen.io/scharan20/pen/gOYxQOo
+      var node = document.createElement("p");
+      node.className = 'pencil_body';
+      node.id = color;
+      node.style.background = color;
+      node.pseudoStyle("after", "border-bottom", `30px solid ${color}`);
+      node.onclick = console.log(node.id);
+      document.getElementById('pencils').appendChild(node);
     },
     cleanSlateCanvas: function (slateMode = false) {
       self.slateMode = slateMode;

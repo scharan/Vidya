@@ -66,6 +66,49 @@ input.button, a.button {
     -webkit-border-radius: 0;
 }
 
+.pencils {
+  position: relative;
+  margin: auto;
+  top: -130px;
+  left: 600px;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.pencil_body {
+  float: left;
+  position: relative;
+  width: 30px;
+  height: 50px;
+  background: #7BC950;
+  border-radius: 5px;
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
+.pencil_body:before {
+  position: relative;
+  top: -80px;
+  content: '';
+  height: 30px;
+  border-bottom: 60px solid #D4915D;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+}
+
+.pencil_body:after {
+  position: relative;
+  top: -82px;
+  left: -22px;
+  content: '';
+  width: 30px;
+  height: 30px;
+  border-bottom: 30px solid #7BC950;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+}
+
 @media (max-width: 520px) {
     body {
       padding: 5px;
