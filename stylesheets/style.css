@@ -9,6 +9,7 @@ body {
     text-align: center;
 
     background-color: azure;
+    user-select: none; /* https://stackoverflow.com/a/2326028 */
 }
 
 a {
