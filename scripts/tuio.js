@@ -1,9 +1,21 @@
 var CanvasDrawr = function (options) {
   var canvas = document.getElementById(options.canvasId);
+  canvas.style.width = '100%'
+  canvas.style.height = '90%'
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  canvas.style.width = '';
+  canvas.style.height = '';
+
   var context = canvas.getContext("2d");
+  context.lineWidth = options.size || Math.ceil(Math.random() * 35);
+  context.lineCap = options.lineCap || "round";
+  context.pX = undefined;
+  context.pY = undefined;
 
   var cleanSlateBtn = document.getElementById(options.cleanSlateBtnId);
   var clearBtn = document.getElementById(options.clearBtnId);
+
   var currentActivityBtn = document.getElementById(options.activityTypeId);
 
   var activityParameters = {
@@ -33,7 +45,7 @@ var CanvasDrawr = function (options) {
 
     colors: ["violet", "indigo", "blue", "green", "yellow", "orange", "pink", "magenta", "orangered", "aqua"],
 
-    init: function () {;
+    init: function () {
       canvas.addEventListener('touchstart', self.preDraw, false);
       canvas.addEventListener('touchmove', self.draw, false);
 
@@ -56,24 +68,9 @@ var CanvasDrawr = function (options) {
         self.showText(self.currentNumber);
         console.log(`activity changed: currrentActivity: ${self.currentActivity}, number: ${self.currentNumber}`);
       }, false);
-      window.addEventListener('orientationchange', self.orientationChanged, false);
 
-      self.orientationChanged()
       self.currentActivity = currentActivityBtn.value;
       self.showText(self.currentNumber);
-    },
-    orientationChanged: function() {
-      canvas.style.width = '100%';
-      canvas.style.height = '90%'; // Allow space for title and navigation
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-      canvas.style.width = '';
-      canvas.style.height = '';
-
-      context.lineWidth = options.size || Math.ceil(Math.random() * 35);
-      context.lineCap = options.lineCap || "round";
-      context.pX = undefined;
-      context.pY = undefined;
     },
     cleanSlateCanvas: function (slateMode = false) {
       self.slateMode = slateMode;
@@ -177,7 +174,6 @@ $(function () {
     activityTypeId: "activityType",
     canvasId: "sketchpad",
     cleanSlateBtnId: "cleanSlateBtn",
-    clearBtnId: "clearBtn",
-    linecap: null
+    clearBtnId: "clearBtn"
   });
 });
