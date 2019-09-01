@@ -69,8 +69,7 @@ input.button, a.button {
 .pencils {
   position: relative;
   margin: auto;
-  top: -130px;
-  left: 600px;
+  top: -122px;
   padding-top: 10px;
   padding-left: 10px;
   padding-right: 10px;
@@ -89,7 +88,7 @@ input.button, a.button {
 
 .pencil_body:before {
   position: relative;
-  top: -80px;
+  top: -75px;
   content: '';
   height: 30px;
   border-bottom: 60px solid #D4915D;
@@ -99,7 +98,7 @@ input.button, a.button {
 
 .pencil_body:after {
   position: relative;
-  top: -82px;
+  top: -78px;
   left: -22px;
   content: '';
   width: 30px;

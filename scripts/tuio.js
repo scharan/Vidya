@@ -42,6 +42,7 @@ var CanvasDrawr = function (options) {
   var clearBtn = document.getElementById(options.clearBtnId);
 
   var currentActivityBtn = document.getElementById(options.activityTypeId);
+  var pencilsNode = document.getElementById('pencils');
 
   var activityParameters = {
     numbers: {
@@ -66,9 +67,9 @@ var CanvasDrawr = function (options) {
     activeColor: 0,
     currentActivity: undefined,
     currentNumber: 0,
-    mousedown: 0,
-
-    colors: ["violet", "indigo", "blue", "green", "yellow", "orange", "pink", "magenta", "orangered", "aqua"],
+    mousedown: false,
+    pencilWidth: 30,
+    colors: ["violet", "indigo", "blue", "green", "orange", "pink", "magenta", "orangered", "aqua"],
 
     init: function () {
       canvas.addEventListener('touchstart', self.preDraw, false);
@@ -91,7 +92,7 @@ var CanvasDrawr = function (options) {
         self.currentNumber = activityParameters[self.currentActivity].asciiStartIndex;
         self.clearCanvas();
         self.showText(self.currentNumber);
-        console.log(`activity changed: currrentActivity: ${self.currentActivity}, number: ${self.currentNumber}`);
+        // console.log(`activity changed: currrentActivity: ${self.currentActivity}, number: ${self.currentNumber}`);
       }, false);
 
       self.currentActivity = currentActivityBtn.value;
@@ -102,6 +103,11 @@ var CanvasDrawr = function (options) {
       self.colors.forEach(function(color) {
         self.addPencil(color);
       });
+
+      var widthOfEachPencil = self.pencilWidth + 3 + 3; /*l/r margins*/
+      var widthOfPencils = self.colors.length * widthOfEachPencil;
+      pencilsStartLocationLeft = (canvas.offsetWidth - widthOfPencils)/2;
+      pencilsNode.style.left = pencilsStartLocationLeft+"px";
     },
     addPencil: function(color) {
       // https://codepen.io/scharan20/pen/gOYxQOo
@@ -109,9 +115,9 @@ var CanvasDrawr = function (options) {
       node.className = 'pencil_body';
       node.id = color;
       node.style.background = color;
-      node.pseudoStyle("after", "border-bottom", `30px solid ${color}`);
+      node.pseudoStyle("after", "border-bottom", `${self.pencilWidth}px solid ${color}`);
       node.onclick = console.log(node.id);
-      document.getElementById('pencils').appendChild(node);
+      pencilsNode.appendChild(node);
     },
     cleanSlateCanvas: function (slateMode = false) {
       self.slateMode = slateMode;
@@ -149,7 +155,7 @@ var CanvasDrawr = function (options) {
     },
     preDraw: function (event) {
       if (event.offsetX) {
-        self.mousedown = 1;
+        self.mousedown = true;
         self.setLine(0, event.offsetX, event.offsetY, self.nextColor());
       } else if (event.touches) {
         $.each(event.touches, function (i, touch) {
@@ -191,7 +197,7 @@ var CanvasDrawr = function (options) {
       event.preventDefault();
     },
     postDraw: function () {
-      self.mousedown = 0;
+      self.mousedown = false;
     },
     move: function (i, changeX, changeY) {
       context.strokeStyle = lines[i].color;
