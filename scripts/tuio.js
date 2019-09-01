@@ -41,10 +41,6 @@ var CanvasDrawr = function (options) {
   // https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance
   var synth = window.speechSynthesis;
   var voices = synth.getVoices();
-  // console.log(`Voices: voices.length: ${voices.length}, ${JSON.stringify(voices)}`);
-  // voices.forEach(function(voice) {
-  //   console.log(`Voices: lang: ${voice.lang}, name: ${voice.name}`);
-  // });
 
   var cleanSlateBtn = document.getElementById(options.cleanSlateBtnId);
   var clearBtn = document.getElementById(options.clearBtnId);
@@ -93,7 +89,9 @@ var CanvasDrawr = function (options) {
       canvas.addEventListener('mousemove', self.draw, false);
       canvas.addEventListener('mouseup', self.postDraw, false);
 
-      clearBtn.addEventListener('click', self.clearCanvas, false);
+      clearBtn.addEventListener('click', function() {
+        self.clearCanvas(self.currentNumber % activityParameters[self.currentActivity].asciiEndIndex);
+      }, false);
       speakBtn.addEventListener('click', function() {
         var textToSpeak = self.textToShow(self.currentNumber)
         self.speak(textToSpeak);
@@ -109,9 +107,7 @@ var CanvasDrawr = function (options) {
       currentActivityBtn.addEventListener('change', function() {
         self.currentActivity = currentActivityBtn.value;
         self.currentNumber = activityParameters[self.currentActivity].asciiStartIndex;
-        self.clearCanvas();
-        self.showText(self.currentNumber);
-        // console.log(`activity changed: currrentActivity: ${self.currentActivity}, number: ${self.currentNumber}`);
+        self.clearCanvas(self.currentNumber);
       }, false);
       document.addEventListener('contextmenu', event => event.preventDefault());
 
@@ -143,10 +139,10 @@ var CanvasDrawr = function (options) {
       self.slateMode = slateMode;
       context.clearRect(0, 0, canvas.width, canvas.height);
     },
-    clearCanvas: function () {
+    clearCanvas: function (text) {
       self.cleanSlateCanvas(self.slateMode);
       if (!self.slateMode)
-        self.showText(self.currentNumber % activityParameters[self.currentActivity].asciiEndIndex);
+        self.showText(text);
     },
     textFromAscii: function (asciiValue) {
       return String.fromCharCode(asciiValue);
@@ -165,7 +161,6 @@ var CanvasDrawr = function (options) {
     },
     speak: function(textToSpeak) {
       utterThis = new SpeechSynthesisUtterance(textToSpeak);
-      // utterThis.voice = voices[1];
       synth.speak(utterThis);
     },
     showText: function (text) {
