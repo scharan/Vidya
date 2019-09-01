@@ -109,11 +109,16 @@ var CanvasDrawr = function (options) {
         self.currentNumber = activityParameters[self.currentActivity].asciiStartIndex;
         self.clearCanvas(self.currentNumber);
       }, false);
+      window.addEventListener('orientationchange', self.orientationChanged, false);
       document.addEventListener('contextmenu', event => event.preventDefault());
 
       self.currentActivity = currentActivityBtn.value;
       self.showText(self.currentNumber);
       self.addPencils();
+    },
+    orientationChanged: function() {
+      // TODO: Don't reset fully. At least retain (1) activity and (2) activity context
+      location.reload();
     },
     addPencils: function() {
       self.colors.forEach(function(color) {
