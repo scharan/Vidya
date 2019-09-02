@@ -23,12 +23,47 @@ HTMLElement.prototype.pseudoStyle = function (element, prop, value) {
   return this;
 };
 
+const activityParameters = {
+  numbers: {
+    showCanvas: true,
+    content: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  },
+  englishUpper: {
+    showCanvas: true,
+    content: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+  },
+  englishLower: {
+    showCanvas: true,
+    content: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'u', 'z']
+  },
+  monthsOfYear: {
+    content: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+  },
+  daysOfWeek: {
+    content: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+  },
+  planets: {
+    content: ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Neptune", "Uranus", "Pluto"]
+  },
+  shapes: {
+    content: [],
+    fontSize: "",
+    utterances: ["Circle", "Line", "Triangle", "Square", "Pentagon", "Hexagon", "Octagon"]
+  },
+  opposites: {
+  },
+  matchingPairs: {
+  }
+};
+
 var CanvasDrawr = function (options) {
   var canvas = document.getElementById(options.canvasId);
-  canvas.style.width = '100%'
-  canvas.style.height = '90%'
-  canvas.width = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;
+  var activities = document.getElementById(options.activitesId);
+  activities.style.zIndex = 3;
+  canvas.style.width = '100%';
+  canvas.style.height = '90%';
+  canvas.width = activities.style.width = canvas.offsetWidth;
+  canvas.height = activities.style.height = canvas.offsetHeight;
   canvas.style.width = '';
   canvas.style.height = '';
 
@@ -53,36 +88,6 @@ var CanvasDrawr = function (options) {
   speakBtn.style.position = 'absolute';
   speakBtn.style.top = canvas.offsetTop+"px";
   speakBtn.style.left = (canvas.offsetLeft + canvas.width - speakBtnFontSizePx)/2+"px";
-
-  var activityParameters = {
-    numbers: {
-      content: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    },
-    englishUpper: {
-      content: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-    },
-    englishLower: {
-      content: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'u', 'z']
-    },
-    monthsOfYear: {
-      content: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-    },
-    daysOfWeek: {
-      content: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-    },
-    planets: {
-      content: ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Neptune", "Uranus", "Pluto"]
-    },
-    shapes: {
-      content: [],
-      fontSize: "",
-      utterances: ["Circle", "Line", "Triangle", "Square", "Pentagon", "Hexagon", "Octagon"]
-    },
-    opposites: {
-    },
-    matchingPairs: {
-    }
-  }
 
   var lines = [, ,];
   var offset = $(canvas).offset();
@@ -124,6 +129,15 @@ var CanvasDrawr = function (options) {
       currentActivityBtn.addEventListener('change', function() {
         self.currentContentIndex = 0;
         self.currentActivity = currentActivityBtn.value;
+        if (!activityParameters[self.currentActivity].showCanvas) {
+          canvas.style.display = "none";
+          pencilsNode.style.visibility = "hidden";
+          activities.style.display = "block";
+        } else {
+          activities.style.display = "none";
+          canvas.style.display = "block";
+          pencilsNode.style.visibility = "visible";
+        }
         console.log(`currentActivityBtn.onchange: ${self.currentActivity}, ${self.currentContentIndex}`);
         self.clearCanvas(activityParameters[self.currentActivity].content[self.currentContentIndex]);
       }, false);
@@ -276,6 +290,7 @@ $(function () {
     size: 15,
     activityTypeId: "activityType",
     canvasId: "sketchpad",
+    activitesId: "activities",
     cleanSlateBtnId: "cleanSlateBtn",
     clearBtnId: "clearBtn",
     speakBtnId: "speakBtn"

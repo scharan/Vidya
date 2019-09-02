@@ -8,7 +8,7 @@ body {
     display: table-cell;
     text-align: center;
 
-    background-color: azure;
+    background-color: #e3eaa7;
     user-select: none; /* https://stackoverflow.com/a/2326028 */
 }
 
@@ -45,8 +45,9 @@ div.frame {
   height: 100%;
 }
 
-canvas {
-  border: 1px solid;
+canvas, #activities {
+  border: 5px green solid;
+  border-radius: 10px;
   background: transparent;
 }
 
