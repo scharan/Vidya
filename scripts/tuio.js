@@ -56,37 +56,31 @@ var CanvasDrawr = function (options) {
 
   var activityParameters = {
     numbers: {
-      asciiStartIndex: 0,
-      asciiEndIndex: 10,
-      currentNumber: 0
+      content: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     },
     englishUpper: {
-      asciiStartIndex: 65,
-      asciiEndIndex: 91,
-      currentNumber: 0
+      content: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
     },
     englishLower: {
-      asciiStartIndex: 97,
-      asciiEndIndex: 123,
-      currentNumber: 0
+      content: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'u', 'z']
     },
     monthsOfYear: {
-
+      content: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     },
     daysOfWeek: {
-
+      content: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     },
     planets: {
-
-    },
-    opposites: {
-
-    },
-    matchingPairs: {
-
+      content: ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Neptune", "Uranus", "Pluto"]
     },
     shapes: {
-
+      content: [],
+      fontSize: "",
+      utterances: ["Circle", "Line", "Triangle", "Square", "Pentagon", "Hexagon", "Octagon"]
+    },
+    opposites: {
+    },
+    matchingPairs: {
     }
   }
 
@@ -97,6 +91,7 @@ var CanvasDrawr = function (options) {
     slateMode: false,
     activeColor: 0,
     currentActivity: undefined,
+    currentContentIndex: 0,
     mousedown: false,
     pencilWidth: 30,
     colors: ["violet", "indigo", "blue", "green", "orange", "pink", "magenta", "orangered", "aqua"],
@@ -111,14 +106,15 @@ var CanvasDrawr = function (options) {
 
       self.currentActivity = currentActivityBtn.value;
       clearBtn.addEventListener('click', function() {
-        self.clearCanvas(activityParameters[self.currentActivity].currentNumber % activityParameters[self.currentActivity].asciiEndIndex);
+        self.clearCanvas(activityParameters[self.currentActivity].content[self.currentContentIndex]);
       }, false);
       speakBtn.addEventListener('click', function() {
-        var textToSpeak = self.textToShow(activityParameters[self.currentActivity].currentNumber)
+        var textToSpeak = self.textToShow(activityParameters[self.currentActivity].content[self.currentContentIndex])
         self.speak(textToSpeak);
-        console.log(`speakBtn.onclick: currentNumber: ${activityParameters[self.currentActivity].currentNumber}, textToSpeak: ${textToSpeak}`);
+        console.log(`speakBtn.onclick: self.currentContentIndex: ${activityParameters[self.currentActivity].content[self.currentContentIndex]}, textToSpeak: ${textToSpeak}`);
       }, false);
       cleanSlateBtn.addEventListener('click',  function() {
+        self.currentContentIndex = -1; // next pre-increments, so go one past
         self.cleanSlateCanvas(true /*slateMode*/);
       }, false);
       nextBtn.addEventListener('click', function() {
@@ -126,14 +122,15 @@ var CanvasDrawr = function (options) {
         self.nextNumber();
       }, false);
       currentActivityBtn.addEventListener('change', function() {
+        self.currentContentIndex = 0;
         self.currentActivity = currentActivityBtn.value;
-        activityParameters[self.currentActivity].currentNumber = activityParameters[self.currentActivity].asciiStartIndex;
-        self.clearCanvas(activityParameters[self.currentActivity].currentNumber);
+        console.log(`currentActivityBtn.onchange: ${self.currentActivity}, ${self.currentContentIndex}`);
+        self.clearCanvas(activityParameters[self.currentActivity].content[self.currentContentIndex]);
       }, false);
       window.addEventListener('orientationchange', self.orientationChanged, false);
       document.addEventListener('contextmenu', event => event.preventDefault());
 
-      self.showText(activityParameters[self.currentActivity].currentNumber);
+      self.showText(activityParameters[self.currentActivity].content[self.currentContentIndex]);
       self.addPencils();
     },
     orientationChanged: function() {
@@ -170,19 +167,21 @@ var CanvasDrawr = function (options) {
         self.showText(text);
     },
     textFromAscii: function (asciiValue) {
-      return String.fromCharCode(asciiValue);
+      return asciiValue;
+      // return String.fromCharCode(asciiValue);
     },
     resetCanvas: function (text) {
       self.cleanSlateCanvas();
-      self.showText(text ? text : activityParameters[self.currentActivity].asciiStartIndex);
+      self.showText(text ? text : activityParameters[self.currentActivity].content[0]);
     },
     nextNumber: function () {
-      activityParameters[self.currentActivity].currentNumber = 
-        (activityParameters[self.currentActivity].currentNumber + 1) % activityParameters[self.currentActivity].asciiEndIndex == 0
-        ? activityParameters[self.currentActivity].asciiStartIndex
-        : activityParameters[self.currentActivity].currentNumber + 1;
-      var next = activityParameters[self.currentActivity].currentNumber;
-      console.log(`nextNumber: currentNumber: ${activityParameters[self.currentActivity].currentNumber}, next: ${next}`);
+      self.currentContentIndex = 
+        (self.currentContentIndex + 1) % activityParameters[self.currentActivity].content.length == 0
+        ? 0
+        : self.currentContentIndex + 1;
+      var nextIndex = self.currentContentIndex;
+      var next = activityParameters[self.currentActivity].content[nextIndex];
+      console.log(`nextNumber: self.currentContentIndex: ${self.currentContentIndex}, nextIndex: ${nextIndex}, next: `);
       self.resetCanvas(next);
     },
     textToShow: function(text) {
