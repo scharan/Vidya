@@ -1,26 +1,26 @@
 //http://mcgivery.com/htmlelement-pseudostyle-settingmodifying-before-and-after-in-javascript/
 //https://jsfiddle.net/Tf69a/1/
 var UID = {
-	_current: 0,
-	getNew: function(){
-		this._current++;
-		return this._current;
-	}
+  _current: 0,
+  getNew: function () {
+    this._current++;
+    return this._current;
+  }
 };
 
-HTMLElement.prototype.pseudoStyle = function(element,prop,value){
-	var _this = this;
-	var _sheetId = "pseudoStyles";
-	var _head = document.head || document.getElementsByTagName('head')[0];
-	var _sheet = document.getElementById(_sheetId) || document.createElement('style');
-	_sheet.id = _sheetId;
-	var className = "pseudoStyle" + UID.getNew();
-	
-	_this.className +=  " "+className; 
-	
-	_sheet.innerHTML += " ."+className+":"+element+"{"+prop+":"+value+"}";
-	_head.appendChild(_sheet);
-	return this;
+HTMLElement.prototype.pseudoStyle = function (element, prop, value) {
+  var _this = this;
+  var _sheetId = "pseudoStyles";
+  var _head = document.head || document.getElementsByTagName('head')[0];
+  var _sheet = document.getElementById(_sheetId) || document.createElement('style');
+  _sheet.id = _sheetId;
+  var className = "pseudoStyle" + UID.getNew();
+
+  _this.className += " " + className;
+
+  _sheet.innerHTML += " ." + className + ":" + element + "{" + prop + ":" + value + "}";
+  _head.appendChild(_sheet);
+  return this;
 };
 
 var CanvasDrawr = function (options) {
@@ -57,15 +57,36 @@ var CanvasDrawr = function (options) {
   var activityParameters = {
     numbers: {
       asciiStartIndex: 0,
-      asciiEndIndex: 10
+      asciiEndIndex: 10,
+      currentNumber: 0
     },
     englishUpper: {
       asciiStartIndex: 65,
-      asciiEndIndex: 91
+      asciiEndIndex: 91,
+      currentNumber: 0
     },
     englishLower: {
       asciiStartIndex: 97,
-      asciiEndIndex: 123
+      asciiEndIndex: 123,
+      currentNumber: 0
+    },
+    monthsOfYear: {
+
+    },
+    daysOfWeek: {
+
+    },
+    planets: {
+
+    },
+    opposites: {
+
+    },
+    matchingPairs: {
+
+    },
+    shapes: {
+
     }
   }
 
@@ -76,7 +97,6 @@ var CanvasDrawr = function (options) {
     slateMode: false,
     activeColor: 0,
     currentActivity: undefined,
-    currentNumber: 0,
     mousedown: false,
     pencilWidth: 30,
     colors: ["violet", "indigo", "blue", "green", "orange", "pink", "magenta", "orangered", "aqua"],
@@ -89,13 +109,14 @@ var CanvasDrawr = function (options) {
       canvas.addEventListener('mousemove', self.draw, false);
       canvas.addEventListener('mouseup', self.postDraw, false);
 
+      self.currentActivity = currentActivityBtn.value;
       clearBtn.addEventListener('click', function() {
-        self.clearCanvas(self.currentNumber % activityParameters[self.currentActivity].asciiEndIndex);
+        self.clearCanvas(activityParameters[self.currentActivity].currentNumber % activityParameters[self.currentActivity].asciiEndIndex);
       }, false);
       speakBtn.addEventListener('click', function() {
-        var textToSpeak = self.textToShow(self.currentNumber)
+        var textToSpeak = self.textToShow(activityParameters[self.currentActivity].currentNumber)
         self.speak(textToSpeak);
-        console.log(`speakBtn.onclick: self.currentNumber: ${self.currentNumber}, textToSpeak: ${textToSpeak}`);
+        console.log(`speakBtn.onclick: currentNumber: ${activityParameters[self.currentActivity].currentNumber}, textToSpeak: ${textToSpeak}`);
       }, false);
       cleanSlateBtn.addEventListener('click',  function() {
         self.cleanSlateCanvas(true /*slateMode*/);
@@ -106,14 +127,13 @@ var CanvasDrawr = function (options) {
       }, false);
       currentActivityBtn.addEventListener('change', function() {
         self.currentActivity = currentActivityBtn.value;
-        self.currentNumber = activityParameters[self.currentActivity].asciiStartIndex;
-        self.clearCanvas(self.currentNumber);
+        activityParameters[self.currentActivity].currentNumber = activityParameters[self.currentActivity].asciiStartIndex;
+        self.clearCanvas(activityParameters[self.currentActivity].currentNumber);
       }, false);
       window.addEventListener('orientationchange', self.orientationChanged, false);
       document.addEventListener('contextmenu', event => event.preventDefault());
 
-      self.currentActivity = currentActivityBtn.value;
-      self.showText(self.currentNumber);
+      self.showText(activityParameters[self.currentActivity].currentNumber);
       self.addPencils();
     },
     orientationChanged: function() {
@@ -157,8 +177,12 @@ var CanvasDrawr = function (options) {
       self.showText(text ? text : activityParameters[self.currentActivity].asciiStartIndex);
     },
     nextNumber: function () {
-      var next = ++self.currentNumber % activityParameters[self.currentActivity].asciiEndIndex;
-      console.log(`nextNumber: self.currentNumber: ${self.currentNumber}, next: ${next}`);
+      activityParameters[self.currentActivity].currentNumber = 
+        (activityParameters[self.currentActivity].currentNumber + 1) % activityParameters[self.currentActivity].asciiEndIndex == 0
+        ? activityParameters[self.currentActivity].asciiStartIndex
+        : activityParameters[self.currentActivity].currentNumber + 1;
+      var next = activityParameters[self.currentActivity].currentNumber;
+      console.log(`nextNumber: currentNumber: ${activityParameters[self.currentActivity].currentNumber}, next: ${next}`);
       self.resetCanvas(next);
     },
     textToShow: function(text) {
