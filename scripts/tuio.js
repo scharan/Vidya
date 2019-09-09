@@ -60,7 +60,7 @@ var CanvasDrawr = function (options) {
   var canvas = document.getElementById(options.canvasId);
   var activities = document.getElementById(options.activitesId);
   activities.style.zIndex = 3;
-  canvas.style.width = '100%';
+  canvas.style.width = '90%';
   canvas.style.height = '90%';
   canvas.width = activities.style.width = canvas.offsetWidth;
   canvas.height = activities.style.height = canvas.offsetHeight;
@@ -152,6 +152,8 @@ var CanvasDrawr = function (options) {
       location.reload();
     },
     addPencils: function() {
+      return; // Temporarily disabled pencils
+
       self.colors.forEach(function(color) {
         self.addPencil(color);
       });
