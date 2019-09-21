@@ -115,7 +115,7 @@ var CanvasDrawr = function (options) {
       }, false);
       speakBtn.addEventListener('click', function() {
         var textToSpeak = self.textToShow(activityParameters[self.currentActivity].content[self.currentContentIndex])
-        self.speak(textToSpeak);
+        self.speak(textToSpeak.toLowerCase());
         console.log(`speakBtn.onclick: self.currentContentIndex: ${activityParameters[self.currentActivity].content[self.currentContentIndex]}, textToSpeak: ${textToSpeak}`);
       }, false);
       cleanSlateBtn.addEventListener('click',  function() {
