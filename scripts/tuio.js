@@ -209,7 +209,7 @@ var CanvasDrawr = function (options) {
     },
     showText: function (text) {
       // https://www.html5tutorial.info/html5-canvas-text.php
-      context.font = canvas.offsetHeight + 'px monospace';
+      context.font = canvas.offsetHeight + 'px sans-serif';
       context.textBaseline = 'middle';
       context.textAlign = 'center';
 
